@@ -1,0 +1,31 @@
+---
+-   name: Create EC2 Instance
+    hosts: localhost
+    gather_facts: false
+     
+    vars:
+      region: ap-south-1
+      instance_type: t2.nano
+      ami: ami-01f703c132f2b1a20
+      keypair: nov_keypair
+      subnetid:  subnet-0217ea05eff2c571a
+
+    tasks:
+      - name: Creating and ec2 instance
+        ec2: 
+           key_name: "{{ keypair }}"
+           group: cli-engg-sg
+           instance_type: "{{ instance_type }}"
+           image: "{{ ami }}"
+           wait: true
+           region: "{{ region }}"
+           count: 1
+           count_tag:
+             Name: mac1
+           instance_tags:
+             Name: mac1
+           vpc_subnet_id: "{{ subnetid }}"
+           assign_public_ip: yes
+        register: ec2
+
+
